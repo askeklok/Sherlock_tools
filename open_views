@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PORT=$1
+
+echo $PORT
+
+if [ "$*" == "" ]; then
+    PORT=8000
+fi
+
+echo "Starting server on: https://localhost:"$PORT
+python3 -m http.server $PORT >/dev/null
+

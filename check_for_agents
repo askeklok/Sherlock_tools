@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "Agents: askeklok \n"
+ps -ax | grep askeklok | grep -v grep
+echo "\n Agents: remote\n"
+ps -ax | grep $VSCH_DIR/out/remoteExtensionHostAgent.js | grep -v grep
