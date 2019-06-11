@@ -13,6 +13,6 @@ if [ "$*" == "" ]; then
     PORT=8000
 fi
 
-echo "Starting server on: localhost:"$PORT
+echo "Starting server on: http://localhost:"$PORT
 python3 -m http.server $PORT >/dev/null
 
