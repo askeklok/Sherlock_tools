@@ -1,4 +1,14 @@
 #!/bin/bash
-echo "Showing queue for: "$USER
+#
+# Displays the users queue in a nice format
+#
+# Arg1: User id, default user id of caller
 
-squeue -o "%.28j %.8T %.10M %.9l %.9P %.10i %.10R" -u $USER
+USERID=$1
+if [ "$*" == "" ]; then
+    USERID=$USER
+fi
+
+echo "Showing queue for: "$USERID
+
+squeue -o "%.28j %.8T %.10M %.9l %.9P %.10i %.10R" -u $USERID

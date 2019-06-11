@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Starts a simple http server to allow for 
+# file exploration in your remote directory
+# 
+# Arg_1: port, default 8000
 
 PORT=$1
 

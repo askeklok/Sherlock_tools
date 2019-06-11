@@ -1,4 +1,10 @@
 #!/bin/bash
+#
+# Provides a prompt for job name upon submission of a SBATCH job
+# SLURM output file will have same name 
+# (OUTPUT FILES WILL BE OVERWRITTEN IF MULTIPLE JOBS ARE SUBMITTED WITH THE SAME NAME)
+#
+# Arg1: job_name, REQUIRED
 
 BATCHFILE=$1
 
