@@ -16,4 +16,4 @@ fi
 read -p "Name of job: "  job_name
 echo "Running job $job_name!"
 
-sbatch -J $job_name -o "slurm_"$job_name".txt" $BATCHFILE
+sbatch -J $job_name -o "slurm/"$job_name".txt" $BATCHFILE
