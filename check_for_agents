@@ -1,5 +1,9 @@
 #!/bin/bash
-echo "Agents: askeklok \n"
-ps -ax | grep askeklok | grep -v grep
-echo "\n Agents: remote\n"
+#
+# Lists all ssh agents for user
+
+echo "Agents: "$USER
+ps -ax | grep $USER | grep -v grep
+echo "_______________"
+echo " Agents: remote"
 ps -ax | grep $VSCH_DIR/out/remoteExtensionHostAgent.js | grep -v grep
