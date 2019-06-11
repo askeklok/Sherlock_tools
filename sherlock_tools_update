@@ -1,0 +1,8 @@
+#!/bin/bash
+
+DIRECTORY=$(dirname $0)
+
+cd $DIRECTORY
+
+git fetch --all
+git reset --hard origin/master
