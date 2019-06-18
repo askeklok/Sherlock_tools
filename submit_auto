@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# Provides a prompt for job name upon submission of a SBATCH job
+# SLURM output file will have same name 
+# (OUTPUT FILES WILL BE OVERWRITTEN IF MULTIPLE JOBS ARE SUBMITTED WITH THE SAME NAME)
+#
+# Arg1: job_name, REQUIRED
+
+function parse_yaml {
+   local prefix=$2
+   local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+   sed -ne "s|^\($s\):|\1|" \
+        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+   awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]}}
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+      }
+   }'
+}
+
+
+if [ $# -eq 0 ]; then
+    echo "No arguments provided"
+    exit 1
+fi
+
+# Parses options
+OPTIONS=$1
+
+eval $(parse_yaml "$OPTIONS" "OPT_") 
+
+echo "weight_decay: $OPT_optimizer_weight_decay"
+echo "learning rate: $OPT_optimizer_lr"
+echo "batchs size: $OPT_dataset_batch_size"
+
+echo  $OPT_exp_dir"/"$OPT_dataset_batch_size"_lr"$((${#OPT_optimizer_lr}-2))"_wd"$((${#OPT_optimizer_weight_decay}-2))
+
+# Sets out directory
+DIRECTORY=".slurm_out"
+
+if [ ! -d "$DIRECTORY" ]; then
+    mkdir $DIRECTORY
+fi
+
+# Parses export directory from bootstrap
+IFS='/' read -ra dir_array <<< "$OPT_exp_dir"
+
+# Generates job name
+arr_len=${#dir_array[@]}
+job_name=${dir_array[arr_len-4]}"__"${dir_array[arr_len-3]}"__"${dir_array[arr_len-2]}"__"${dir_array[arr_len-1]}
+
+
+cd ~/Brain_age_estimation/
+source .venv/bin/activate
+
+echo "submitting job: $job_name"
+
+job_name_len=${#job_name}
+loops=$((50-$job_name_len))
+
+job_name_str=$job_name
+count=46
+while [ ${#job_name_str} -lt $count ]
+do
+   job_name_str=" "$job_name_str
+done
+
+
+sbatch -J "$job_name_str" -o $DIRECTORY"/"$job_name".txt" --constraint "GPU_SKU:V100_SXM2|GPU_SKU:TITAN_Xp|GPU_SKU:TITAN_V" .slurm/submit_auto.sh $OPTIONS $OPT_exp_dir $OPT_dataset_batch_size $OPT_optimizer_weight_decay $OPT_optimizer_lr

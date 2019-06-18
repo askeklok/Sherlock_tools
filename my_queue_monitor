@@ -1,0 +1,14 @@
+if [ $# -eq 0 ]; then
+    echo Please specify interval time [ex. 30s or 3m]
+    exit 1
+fi
+
+echo 
+echo Current time $(date +"%T")
+my_queue
+
+echo
+
+sleep $1
+
+my_queue_monitor $1

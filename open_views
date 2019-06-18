@@ -5,6 +5,11 @@
 # 
 # Arg_1: port, default 8000
 
+
+if [ $# -eq 2 ]; then
+    cd $2
+fi
+
 PORT=$1
 
 echo $PORT

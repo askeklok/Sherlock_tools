@@ -11,4 +11,4 @@ fi
 
 echo "Showing queue for: "$USERID
 
-squeue -o "%.28j %.8T %.10M %.9l %.9P %.10i %.10R" -u $USERID
+squeue -S "j" -o "%.45j %.8T %.10M %.9l %.9P %.10i %.10R" -u $USERID
